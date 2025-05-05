@@ -1,69 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+/* Windows 95 style variables */
+:root {
+  --win95-bg: #c0c0c0;
+  --win95-light: #ffffff;
+  --win95-dark: #808080;
+  --win95-darker: #404040;
+  --win95-blue: #000080;
+  --win95-text: #000000;
+  --win95-shadow-out: inset -1px -1px #000000, inset 1px 1px #ffffff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
+  --win95-shadow-in: inset -1px -1px #ffffff, inset 1px 1px #000000, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
+}
+
 body { 
-  font-family: sans-serif; 
+  font-family: 'VT323', 'Courier New', monospace; 
   margin: 0; 
-  padding: 0; 
+  padding: 20px 0; 
   display: flex; 
   flex-direction: column; 
   align-items: center; 
-  background: #eee; 
-  color: #333; 
+  background: var(--win95-bg); 
+  color: var(--win95-text); 
 }
 
 body[data-theme='dark'] { 
-  background: #222; 
-  color: #eee; 
+  --win95-bg: #000080;
+  --win95-light: #808080;
+  --win95-dark: #000040;
+  --win95-darker: #000000;
+  --win95-text: #ffffff;
+  background: var(--win95-bg);
+  color: var(--win95-text); 
+}
+
+.win95-window {
+  border: 2px solid;
+  border-color: var(--win95-light) var(--win95-darker) var(--win95-darker) var(--win95-light);
+  background-color: var(--win95-bg);
+  box-shadow: var(--win95-shadow-out);
+  padding: 2px;
+  position: relative;
+}
+
+.window-title {
+  background: var(--win95-blue);
+  color: white;
+  font-weight: bold;
+  padding: 2px 4px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.window-content {
+  padding: 10px;
+}
+
+#game-container {
+  width: max-content;
+  margin: 20px auto;
 }
 
 #controls { 
-  margin: 10px; 
+  margin: 10px auto; 
   padding: 10px;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   align-items: center;
   justify-content: center;
+  max-width: 700px;
 }
 
 #custom-settings {
   display: none;
   gap: 10px;
-  margin: 5px 0;
+  margin: 8px 0;
   flex-wrap: wrap;
   justify-content: center;
+  padding: 5px;
+  background: var(--win95-bg);
+  box-shadow: var(--win95-shadow-in);
 }
 
 #custom-settings input {
   width: 60px;
   margin-left: 5px;
+  font-family: 'VT323', monospace;
+  font-size: 16px;
 }
 
 #game { 
   display: grid; 
-  gap: 2px;
-  margin: 20px 0;
+  gap: 1px;
+  margin: 10px;
+  background-color: var(--win95-darker);
+  padding: 1px;
+  box-shadow: var(--win95-shadow-in);
 }
 
 .cell { 
-  width: 30px; 
-  height: 30px; 
-  background: #ccc; 
+  width: 26px; 
+  height: 26px; 
+  background: var(--win95-bg); 
   text-align: center; 
-  line-height: 30px; 
+  line-height: 26px; 
   user-select: none;
   font-weight: bold;
+  font-size: 20px;
+  box-shadow: var(--win95-shadow-out);
+  cursor: default;
 }
 
 .cell.revealed { 
-  background: #eee; 
+  background: var(--win95-bg); 
+  box-shadow: var(--win95-shadow-in);
+  font-family: 'VT323', monospace;
 }
 
 .cell.mine { 
   background: #f00; 
+  box-shadow: var(--win95-shadow-in);
 }
 
 .cell.flagged { 
-  background: #f99; 
-  color: #333;
+  background: var(--win95-bg); 
+  color: #ff0000;
 }
 
 /* Colors for numbers */
@@ -115,74 +176,157 @@ body[data-theme='dark'] .cell[data-value="8"] { color: white; }
 
 /* Leaderboard styling */
 #leaderboard {
-  margin: 20px;
-  padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  max-width: 400px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-body[data-theme='dark'] #leaderboard {
-  border-color: #555;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-}
-
-#leaderboard h2 {
-  margin-top: 0;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 10px;
-  text-align: center;
+  margin: 15px auto;
+  max-width: 600px;
+  width: 100%;
 }
 
 #leaderboard-list {
-  padding-left: 20px;
+  padding-left: 0;
+  list-style-type: none;
+  margin: 0;
+  font-family: 'VT323', 'Courier New', monospace;
+  font-size: 18px;
 }
 
 #leaderboard-list li {
   margin: 5px 0;
+  padding: 3px 5px;
+  background: var(--win95-bg);
+  border-bottom: 1px solid var(--win95-dark);
+  display: flex;
+  justify-content: space-between;
+}
+
+#leaderboard-list li:nth-child(even) {
+  background: var(--win95-light);
+}
+
+body[data-theme='dark'] #leaderboard-list li:nth-child(even) {
+  background: var(--win95-dark);
 }
 
 /* Button styling */
 button {
-  padding: 5px 10px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  background: #f0f0f0;
+  padding: 4px 8px;
+  border: 2px solid;
+  border-color: var(--win95-light) var(--win95-darker) var(--win95-darker) var(--win95-light);
+  background: var(--win95-bg);
+  color: var(--win95-text);
+  font-family: 'VT323', 'Courier New', monospace;
+  font-size: 16px;
   cursor: pointer;
-  transition: all 0.2s;
+  box-shadow: var(--win95-shadow-out);
+  margin: 2px;
 }
 
-button:hover {
-  background: #e0e0e0;
+button:active {
+  box-shadow: var(--win95-shadow-in);
+  border-color: var(--win95-darker) var(--win95-light) var(--win95-light) var(--win95-darker);
 }
 
-body[data-theme='dark'] button {
-  background: #444;
-  color: #eee;
-  border-color: #555;
-}
-
-body[data-theme='dark'] button:hover {
-  background: #555;
+button:focus {
+  outline: 1px dotted black;
+  outline-offset: -5px;
 }
 
 /* Select and inputs */
 select, input {
-  padding: 5px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+  padding: 2px 5px;
+  border: 2px solid;
+  border-color: var(--win95-darker) var(--win95-light) var(--win95-light) var(--win95-darker);
+  background-color: white;
+  color: black;
+  font-family: 'VT323', 'Courier New', monospace;
+  font-size: 16px;
+  box-shadow: var(--win95-shadow-in);
 }
 
 body[data-theme='dark'] select,
 body[data-theme='dark'] input {
-  background: #444;
-  color: #eee;
-  border-color: #555;
+  background-color: var(--win95-bg);
+  color: var(--win95-text);
 }
 
 /* Main title */
 h1 {
-  margin: 15px 0 5px;
+  font-size: 28px;
+  margin: 10px 0;
   text-align: center;
+  color: var(--win95-text);
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px var(--win95-light);
+}
+
+/* Game information box */
+#info-box {
+  margin: 15px auto;
+  max-width: 600px;
+  box-shadow: var(--win95-shadow-out);
+  border: 2px solid;
+  border-color: var(--win95-light) var(--win95-darker) var(--win95-darker) var(--win95-light);
+}
+
+#info-box-title {
+  background: var(--win95-blue);
+  color: white;
+  padding: 3px 5px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#info-box-content {
+  padding: 10px;
+  background: var(--win95-bg);
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+#game-stats {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+  gap: 10px;
+}
+
+.stat-box {
+  border: 2px solid;
+  border-color: var(--win95-darker) var(--win95-light) var(--win95-light) var(--win95-darker);
+  background: black;
+  color: red;
+  font-family: 'VT323', 'Courier New', monospace;
+  font-size: 20px;
+  padding: 2px 8px;
+  font-weight: bold;
+  box-shadow: var(--win95-shadow-in);
+}
+
+/* Face button */
+#face-button {
+  width: 40px;
+  height: 40px;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  cursor: pointer;
+  box-shadow: var(--win95-shadow-out);
+}
+
+#face-button:active {
+  box-shadow: var(--win95-shadow-in);
+}
+
+/* Game controls bar */
+#game-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 5px;
 }

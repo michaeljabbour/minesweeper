@@ -3,44 +3,87 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Minesweeper</title>
+  <title>Minesweeper 95</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body data-theme="light">
-  <h1>Minesweeper</h1>
-  <div id="controls">
-    <div>
-      <label for="difficulty">Difficulty:</label>
-      <select id="difficulty">
-        <option value="9x9-10">Beginner</option>
-        <option value="16x16-40">Intermediate</option>
-        <option value="30x16-99">Expert</option>
-        <option value="custom">Custom</option>
-      </select>
+  <div class="win95-window" style="max-width: 800px; width: 95%;">
+    <div class="window-title">
+      Minesweeper 95
     </div>
-    <div id="custom-settings" style="display:none;">
-      <label>Rows: <input type="number" id="rows" min="5" max="100" value="9"></label>
-      <label>Cols: <input type="number" id="cols" min="5" max="100" value="9"></label>
-      <label>Mines: <input type="number" id="mines" min="1" max="1000" value="10"></label>
+    <div class="window-content">
+      <!-- Game menu -->
+      <div id="controls" class="win95-window">
+        <div class="window-title">Game Options</div>
+        <div class="window-content">
+          <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+            <div>
+              <label for="difficulty">Difficulty:</label>
+              <select id="difficulty">
+                <option value="9x9-10">Beginner</option>
+                <option value="16x16-40">Intermediate</option>
+                <option value="30x16-99">Expert</option>
+                <option value="custom">Custom</option>
+              </select>
+            </div>
+            <div id="custom-settings">
+              <label>Rows: <input type="number" id="rows" min="5" max="100" value="9"></label>
+              <label>Cols: <input type="number" id="cols" min="5" max="100" value="9"></label>
+              <label>Mines: <input type="number" id="mines" min="1" max="1000" value="10"></label>
+            </div>
+            <button id="theme-toggle">Dark Theme</button>
+            <button id="mute-toggle">Mute Sound</button>
+            <button id="hint-button">Hint (<span id="hints">3</span>)</button>
+            <button id="share-button">Share</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Game board -->
+      <div id="game-container" class="win95-window">
+        <div id="game-controls">
+          <div class="stat-box" id="mines-counter">010</div>
+          <div id="face-button">🙂</div>
+          <div class="stat-box" id="timer">000</div>
+        </div>
+        <div id="game"></div>
+      </div>
+      
+      <!-- Rules -->
+      <div id="info-box">
+        <div id="info-box-title">
+          <span>How to Play</span>
+          <span style="font-family: 'Segoe UI', Tahoma, sans-serif;">?</span>
+        </div>
+        <div id="info-box-content">
+          <h3>Rules:</h3>
+          <ol>
+            <li>Left-click to reveal a cell</li>
+            <li>Right-click to flag a suspected mine</li>
+            <li>Numbers indicate how many mines are adjacent to that cell</li>
+            <li>Clear all non-mine cells to win</li>
+            <li>If you click on a mine, you lose!</li>
+          </ol>
+          <h3>Tips:</h3>
+          <ul>
+            <li>Use the hint button for help (3 available per game)</li>
+            <li>First click is always safe</li>
+            <li>The counter shows remaining mines (total mines - flagged cells)</li>
+          </ul>
+          <p>Good luck!</p>
+        </div>
+      </div>
+      
+      <!-- Leaderboard -->
+      <div id="leaderboard" class="win95-window">
+        <div class="window-title">Leaderboard</div>
+        <div class="window-content">
+          <ul id="leaderboard-list"></ul>
+        </div>
+      </div>
+      
+      <button id="new-game" style="margin-top: 10px; width: 100%;">New Game</button>
     </div>
-    <button id="new-game">New Game</button>
-    <div>Timer: <span id="timer">00:00</span></div>
-    <button id="theme-toggle">Dark Theme</button>
-    <button id="mute-toggle">Mute Sound</button>
-    <button id="hint-button">Hint (<span id="hints">3</span>)</button>
-    <button id="share-button">Share</button>
-  </div>
-  
-  <div id="game"></div>
-  
-  <div id="info">
-    <p>Left-click to reveal a cell, right-click to flag a potential mine.</p>
-    <p>Use the Hint button for help (limited to 3 per game).</p>
-  </div>
-  
-  <div id="leaderboard">
-    <h2>Leaderboard</h2>
-    <ul id="leaderboard-list"></ul>
   </div>
   
   <script type="module" src="js/sounds.js"></script>

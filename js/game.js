@@ -1,4 +1,4 @@
-import { renderBoard, updateTimer, updateHints, updateLeaderboard, applyTheme, playSound, shareResults } from './ui.js';
+import { renderBoard, updateTimer, updateHints, updateLeaderboard, updateMinesCounter, updateFace, applyTheme, playSound, shareResults } from './ui.js';
 import { saveState, loadState, saveLeaders, loadLeaders, saveSettings, loadSettings } from './storage.js';
 
 class Game {
@@ -11,6 +11,23 @@ class Game {
     this.timer = null; 
     this.time = 0; 
     this.hintsLeft = 3;
+    this.gameState = 'default'; // default, playing, win, lose
+    
+    // Set up face button click handler
+    const faceButton = document.getElementById('face-button');
+    if (faceButton) {
+      faceButton.onclick = () => document.getElementById('new-game').click();
+    }
+    
+    // Initialize the mines counter
+    updateMinesCounter(this.mines);
+    
+    // Reset the timer display
+    updateTimer(0);
+    
+    // Reset the face
+    updateFace('default');
+    
     this.setup();
   }
   
@@ -19,6 +36,26 @@ class Game {
     this.visible = Array(this.rows).fill().map(() => Array(this.cols).fill(false));
     this.flagged = Array(this.rows).fill().map(() => Array(this.cols).fill(false));
     renderBoard(this.rows, this.cols, (r,c,btn) => this.handleClick(r,c,btn));
+    
+    // Add global mouse events for face reactions
+    document.getElementById('game').addEventListener('mousedown', () => {
+      if (this.gameState !== 'win' && this.gameState !== 'lose') {
+        updateFace('wow');
+      }
+    });
+    
+    document.getElementById('game').addEventListener('mouseup', () => {
+      if (this.gameState !== 'win' && this.gameState !== 'lose') {
+        updateFace('default');
+      }
+    });
+    
+    document.getElementById('game').addEventListener('mouseleave', () => {
+      if (this.gameState !== 'win' && this.gameState !== 'lose') {
+        updateFace('default');
+      }
+    });
+    
     updateHints(this.hintsLeft);
   }
   
@@ -100,14 +137,28 @@ class Game {
   }
   
   toggleFlag(r, c) { 
-    if(this.visible[r][c]) return;
+    // Don't allow flagging if game is over
+    if(this.visible[r][c] || this.gameState === 'win' || this.gameState === 'lose') return;
+    
+    // Toggle flag state
     this.flagged[r][c] = !this.flagged[r][c]; 
+    
+    // Update flag counter
+    if (this.flagged[r][c]) {
+      this.flags++;
+    } else {
+      this.flags--;
+    }
+    
+    // Update the mines counter (mines - flags)
+    updateMinesCounter(this.mines - this.flags);
+    
     // Update the UI to show the flagged cell
     const cell = document.querySelector(`[data-r="${r}"][data-c="${c}"]`);
     if (cell) {
       if (this.flagged[r][c]) {
         cell.classList.add('flagged');
-        cell.textContent = 'F';
+        cell.textContent = '🚩';
       } else {
         cell.classList.remove('flagged');
         cell.textContent = '';
@@ -125,10 +176,55 @@ class Game {
   }
   
   gameOver(win) { 
-    clearInterval(this.timer); 
-    playSound(win ? 'win' : 'lose'); 
-    if(win) saveLeaders(this.time); 
-    updateLeaderboard(loadLeaders()); 
+    clearInterval(this.timer);
+    this.gameState = win ? 'win' : 'lose';
+    
+    // Update face
+    updateFace(this.gameState);
+    
+    // Play sound
+    playSound(win ? 'win' : 'lose');
+    
+    // Reveal all mines if lost
+    if (!win) {
+      this.revealAllMines();
+    }
+    
+    // Save score if won
+    if(win) {
+      saveLeaders(this.time);
+    }
+    
+    // Update leaderboard
+    updateLeaderboard(loadLeaders());
+  }
+  
+  // Reveal all mines when game is lost
+  revealAllMines() {
+    for(let r = 0; r < this.rows; r++) {
+      for(let c = 0; c < this.cols; c++) {
+        if(this.grid[r][c] === 'M') {
+          this.visible[r][c] = true;
+          
+          const cell = document.querySelector(`[data-r="${r}"][data-c="${c}"]`);
+          if (cell) {
+            // If it was flagged correctly, show a different style
+            if (this.flagged[r][c]) {
+              cell.textContent = '✅';
+            } else {
+              cell.classList.add('mine');
+              cell.textContent = '💣';
+            }
+          }
+        } else if (this.flagged[r][c]) {
+          // Show incorrectly flagged cells
+          const cell = document.querySelector(`[data-r="${r}"][data-c="${c}"]`);
+          if (cell) {
+            cell.textContent = '❌';
+          }
+        }
+      }
+    }
   }
   
   giveHint() {

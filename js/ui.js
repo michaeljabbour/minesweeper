@@ -32,9 +32,35 @@ export function renderBoard(rows, cols, handler) {
 }
 
 export function updateTimer(sec) {
-  const m = Math.floor(sec / 60).toString().padStart(2, '0'); 
-  const s = (sec % 60).toString().padStart(2, '0'); 
-  document.getElementById('timer').textContent = `${m}:${s}`; 
+  // Max time display is 999 seconds
+  const displayTime = Math.min(sec, 999).toString().padStart(3, '0');
+  document.getElementById('timer').textContent = displayTime; 
+}
+
+// Update the mines counter
+export function updateMinesCounter(count) {
+  // Ensure the counter doesn't go negative and max is 999
+  const displayCount = Math.max(0, Math.min(count, 999)).toString().padStart(3, '0');
+  document.getElementById('mines-counter').textContent = displayCount;
+}
+
+// Update face based on game state
+export function updateFace(state) {
+  const faceButton = document.getElementById('face-button');
+  switch(state) {
+    case 'default':
+      faceButton.textContent = '🙂';
+      break;
+    case 'wow':
+      faceButton.textContent = '😮';
+      break;
+    case 'win':
+      faceButton.textContent = '😎';
+      break;
+    case 'lose':
+      faceButton.textContent = '😵';
+      break;
+  }
 }
 
 export function updateHints(n) {
