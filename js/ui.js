@@ -1,4 +1,5 @@
 import { saveSettings } from './storage.js';
+import { playSound } from './sounds.js';
 
 export function renderBoard(rows, cols, handler) { 
   const container = document.getElementById('game'); 
@@ -12,11 +13,22 @@ export function renderBoard(rows, cols, handler) {
       cell.dataset.c = c; 
       cell.onmousedown = e => { 
         e.preventDefault(); 
+        if (e.button === 0) {
+          playSound('click');
+        } else if (e.button === 2) {
+          playSound('flag');
+        }
         handler(r, c, e.button); 
       }; 
       container.append(cell);
     }
   }
+  
+  // Prevent context menu on right-click
+  container.addEventListener('contextmenu', e => {
+    e.preventDefault();
+    return false;
+  });
 }
 
 export function updateTimer(sec) {
@@ -31,20 +43,26 @@ export function updateHints(n) {
 
 export function updateLeaderboard(list) {
   const ul = document.getElementById('leaderboard-list'); 
-  ul.innerHTML = list.map(l => `<li>${l.name}: ${l.time}s [${l.date}]</li>`).join(''); 
+  if (!list || list.length === 0) {
+    ul.innerHTML = '<li>No records yet</li>';
+    return;
+  }
+  ul.innerHTML = list
+    .sort((a, b) => a.time - b.time)
+    .slice(0, 10)
+    .map((l, i) => `<li>${i+1}. ${l.name}: ${l.time}s [${l.date}]</li>`)
+    .join(''); 
 }
 
 export function applyTheme(theme) {
   const body = document.body;
   const t = theme || (body.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
   body.setAttribute('data-theme', t);
+  document.getElementById('theme-toggle').textContent = t === 'dark' ? 'Light Theme' : 'Dark Theme';
   saveSettings({theme: t});
 }
 
-export function playSound(type) {
-  // Implementation of sound effects would go here
-  console.log(`Playing sound: ${type}`);
-}
+export { playSound };  // Re-export playSound
 
 export function shareResults() {
   const time = document.getElementById('timer').textContent;

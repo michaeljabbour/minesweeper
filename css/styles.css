@@ -1,10 +1,188 @@
-body { font-family: sans-serif; margin:0; padding:0; display:flex; flex-direction:column; align-items:center; background:#eee; color:#333; }
-body[data-theme='dark'] { background:#222; color:#eee; }
-#controls { margin:10px; }
-#game { display:grid; gap:2px; }
-.cell { width:30px; height:30px; background:#ccc; text-align:center; line-height:30px; user-select:none; }
-.cell.revealed { background:#eee; }
-.cell.mine { background:#f00; }
-.cell.flagged { background:#f99; }
-.dark .cell { background:#555; }
-.dark .cell.revealed { background:#777; }   
+body { 
+  font-family: sans-serif; 
+  margin: 0; 
+  padding: 0; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  background: #eee; 
+  color: #333; 
+}
+
+body[data-theme='dark'] { 
+  background: #222; 
+  color: #eee; 
+}
+
+#controls { 
+  margin: 10px; 
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+#custom-settings {
+  display: none;
+  gap: 10px;
+  margin: 5px 0;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+#custom-settings input {
+  width: 60px;
+  margin-left: 5px;
+}
+
+#game { 
+  display: grid; 
+  gap: 2px;
+  margin: 20px 0;
+}
+
+.cell { 
+  width: 30px; 
+  height: 30px; 
+  background: #ccc; 
+  text-align: center; 
+  line-height: 30px; 
+  user-select: none;
+  font-weight: bold;
+}
+
+.cell.revealed { 
+  background: #eee; 
+}
+
+.cell.mine { 
+  background: #f00; 
+}
+
+.cell.flagged { 
+  background: #f99; 
+  color: #333;
+}
+
+/* Colors for numbers */
+.cell[data-value="1"] { color: blue; }
+.cell[data-value="2"] { color: green; }
+.cell[data-value="3"] { color: red; }
+.cell[data-value="4"] { color: darkblue; }
+.cell[data-value="5"] { color: darkred; }
+.cell[data-value="6"] { color: teal; }
+.cell[data-value="7"] { color: black; }
+.cell[data-value="8"] { color: gray; }
+
+/* Dark theme styles */
+body[data-theme='dark'] .cell { 
+  background: #555; 
+}
+
+body[data-theme='dark'] .cell.revealed { 
+  background: #444; 
+}
+
+body[data-theme='dark'] .cell.mine { 
+  background: #900; 
+}
+
+body[data-theme='dark'] .cell.flagged { 
+  background: #955; 
+  color: #eee;
+}
+
+/* Make sure numbers are visible in dark theme */
+body[data-theme='dark'] .cell[data-value="1"] { color: lightblue; }
+body[data-theme='dark'] .cell[data-value="2"] { color: lightgreen; }
+body[data-theme='dark'] .cell[data-value="3"] { color: lightsalmon; }
+body[data-theme='dark'] .cell[data-value="4"] { color: lightskyblue; }
+body[data-theme='dark'] .cell[data-value="5"] { color: lightcoral; }
+body[data-theme='dark'] .cell[data-value="6"] { color: lightseagreen; }
+body[data-theme='dark'] .cell[data-value="7"] { color: lightgray; }
+body[data-theme='dark'] .cell[data-value="8"] { color: white; }
+
+/* Info section */
+#info {
+  margin: 10px auto;
+  max-width: 500px;
+  text-align: center;
+  padding: 5px;
+  font-size: 0.9em;
+}
+
+/* Leaderboard styling */
+#leaderboard {
+  margin: 20px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  max-width: 400px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+body[data-theme='dark'] #leaderboard {
+  border-color: #555;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+#leaderboard h2 {
+  margin-top: 0;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  text-align: center;
+}
+
+#leaderboard-list {
+  padding-left: 20px;
+}
+
+#leaderboard-list li {
+  margin: 5px 0;
+}
+
+/* Button styling */
+button {
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background: #f0f0f0;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+button:hover {
+  background: #e0e0e0;
+}
+
+body[data-theme='dark'] button {
+  background: #444;
+  color: #eee;
+  border-color: #555;
+}
+
+body[data-theme='dark'] button:hover {
+  background: #555;
+}
+
+/* Select and inputs */
+select, input {
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+body[data-theme='dark'] select,
+body[data-theme='dark'] input {
+  background: #444;
+  color: #eee;
+  border-color: #555;
+}
+
+/* Main title */
+h1 {
+  margin: 15px 0 5px;
+  text-align: center;
+}

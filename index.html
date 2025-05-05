@@ -7,26 +7,43 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body data-theme="light">
+  <h1>Minesweeper</h1>
   <div id="controls">
-    <select id="difficulty">
-      <option value="9x9-10">Beginner</option>
-      <option value="16x16-40">Intermediate</option>
-      <option value="30x16-99">Expert</option>
-      <option value="custom">Custom</option>
-    </select>
-    <span id="custom-settings" style="display:none;">Rows: <input type="number" id="rows" min="5" max="100" value="9"> Cols: <input type="number" id="cols" min="5" max="100" value="9"> Mines: <input type="number" id="mines" min="1" max="1000" value="10"></span>
+    <div>
+      <label for="difficulty">Difficulty:</label>
+      <select id="difficulty">
+        <option value="9x9-10">Beginner</option>
+        <option value="16x16-40">Intermediate</option>
+        <option value="30x16-99">Expert</option>
+        <option value="custom">Custom</option>
+      </select>
+    </div>
+    <div id="custom-settings" style="display:none;">
+      <label>Rows: <input type="number" id="rows" min="5" max="100" value="9"></label>
+      <label>Cols: <input type="number" id="cols" min="5" max="100" value="9"></label>
+      <label>Mines: <input type="number" id="mines" min="1" max="1000" value="10"></label>
+    </div>
     <button id="new-game">New Game</button>
-    <span id="timer">00:00</span>
-    <button id="theme-toggle">Toggle Theme</button>
+    <div>Timer: <span id="timer">00:00</span></div>
+    <button id="theme-toggle">Dark Theme</button>
     <button id="mute-toggle">Mute Sound</button>
     <button id="hint-button">Hint (<span id="hints">3</span>)</button>
     <button id="share-button">Share</button>
   </div>
+  
   <div id="game"></div>
+  
+  <div id="info">
+    <p>Left-click to reveal a cell, right-click to flag a potential mine.</p>
+    <p>Use the Hint button for help (limited to 3 per game).</p>
+  </div>
+  
   <div id="leaderboard">
     <h2>Leaderboard</h2>
     <ul id="leaderboard-list"></ul>
   </div>
+  
+  <script type="module" src="js/sounds.js"></script>
   <script type="module" src="js/game.js"></script>
   <script type="module" src="js/ui.js"></script>
   <script type="module" src="js/storage.js"></script>
