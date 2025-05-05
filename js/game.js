@@ -323,42 +323,60 @@ window.addEventListener('DOMContentLoaded', () => {
   
   // Start a new game when difficulty changes
   function startNewGame() {
-    let rows, cols, mines;
-    
-    if (difficultySelect.value === 'custom') {
-      rows = parseInt(document.getElementById('rows').value);
-      cols = parseInt(document.getElementById('cols').value);
-      mines = parseInt(document.getElementById('mines').value);
-      
-      // Validate inputs
-      if (isNaN(rows) || rows < 5) rows = 5;
-      if (isNaN(cols) || cols < 5) cols = 5;
-      if (isNaN(mines) || mines < 1) mines = 1;
-      
-      // Ensure mines don't exceed cells - 1 (need at least one safe cell)
-      const maxMines = rows * cols - 1;
-      if (mines > maxMines) mines = maxMines;
-      
-      // Update inputs with validated values
-      document.getElementById('rows').value = rows;
-      document.getElementById('cols').value = cols;
-      document.getElementById('mines').value = mines;
-    } else {
-      let config = difficultySelect.value.split('x');
-      rows = parseInt(config[0]);
-      
-      if(config.length > 1) {
-        let parts = config[1].split('-');
-        cols = parseInt(parts[0]);
-        mines = parseInt(parts[1]);
-      } else {
-        cols = rows;
-        mines = Math.floor(rows * cols * 0.15); // Default 15% mines
-      }
+    // Stop previous game timer if it exists
+    if (window.game && window.game.timer) {
+      clearInterval(window.game.timer);
     }
     
-    // Create new game
-    window.game = new Game(rows, cols, mines);
+    let rows, cols, mines;
+    
+    try {
+      if (difficultySelect.value === 'custom') {
+        rows = parseInt(document.getElementById('rows').value);
+        cols = parseInt(document.getElementById('cols').value);
+        mines = parseInt(document.getElementById('mines').value);
+        
+        // Validate inputs
+        if (isNaN(rows) || rows < 5) rows = 5;
+        if (isNaN(cols) || cols < 5) cols = 5;
+        if (isNaN(mines) || mines < 1) mines = 1;
+        
+        // Ensure mines don't exceed cells - 1 (need at least one safe cell)
+        const maxMines = rows * cols - 1;
+        if (mines > maxMines) mines = maxMines;
+        
+        // Update inputs with validated values
+        document.getElementById('rows').value = rows;
+        document.getElementById('cols').value = cols;
+        document.getElementById('mines').value = mines;
+      } else {
+        let config = difficultySelect.value.split('x');
+        rows = parseInt(config[0]);
+        
+        if(config.length > 1) {
+          let parts = config[1].split('-');
+          cols = parseInt(parts[0]);
+          mines = parseInt(parts[1]);
+        } else {
+          cols = rows;
+          mines = Math.floor(rows * cols * 0.15); // Default 15% mines
+        }
+      }
+      
+      // Make sure values are valid
+      rows = Math.max(5, rows);
+      cols = Math.max(5, cols);
+      mines = Math.max(1, Math.min(rows * cols - 1, mines));
+      
+      console.log(`Starting new game: ${rows}x${cols} with ${mines} mines`);
+      
+      // Create new game
+      window.game = new Game(rows, cols, mines);
+    } catch (e) {
+      console.error("Error starting new game:", e);
+      // Fall back to beginner settings if there's an error
+      window.game = new Game(9, 9, 10);
+    }
   }
   
   // Initialize game with default settings
@@ -370,5 +388,14 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('mines').addEventListener('change', startNewGame);
   
   // Update new game button to start a new game with current settings
-  document.getElementById('new-game').addEventListener('click', startNewGame);
+  const newGameButton = document.getElementById('new-game');
+  if (newGameButton) {
+    console.log('Setting up new-game button');
+    newGameButton.addEventListener('click', function() {
+      console.log('New game button clicked');
+      startNewGame();
+    });
+  } else {
+    console.error('Could not find new-game button');
+  }
 });
