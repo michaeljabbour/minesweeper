@@ -73,7 +73,16 @@ class Game {
   reveal(r, c) { 
     if(this.visible[r][c] || this.flagged[r][c]) return; 
     this.visible[r][c] = true; 
-    renderBoard(r, c, this.grid[r][c]); 
+    // Update the UI to show the revealed cell
+    const cell = document.querySelector(`[data-r="${r}"][data-c="${c}"]`);
+    if (cell) {
+      cell.classList.add('revealed');
+      if (this.grid[r][c] > 0) {
+        cell.textContent = this.grid[r][c];
+      } else if (this.grid[r][c] === 'M') {
+        cell.classList.add('mine');
+      }
+    }
     if(this.grid[r][c] === 0) {
       for(let i = -1; i <= 1; i++) {
         for(let j = -1; j <= 1; j++) {
@@ -91,7 +100,17 @@ class Game {
   toggleFlag(r, c) { 
     if(this.visible[r][c]) return;
     this.flagged[r][c] = !this.flagged[r][c]; 
-    renderBoard(r, c, this.flagged[r][c] ? 'F' : ''); 
+    // Update the UI to show the flagged cell
+    const cell = document.querySelector(`[data-r="${r}"][data-c="${c}"]`);
+    if (cell) {
+      if (this.flagged[r][c]) {
+        cell.classList.add('flagged');
+        cell.textContent = 'F';
+      } else {
+        cell.classList.remove('flagged');
+        cell.textContent = '';
+      }
+    }
   }
   
   checkWin() { 

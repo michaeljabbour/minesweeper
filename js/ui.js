@@ -1,3 +1,5 @@
+import { saveSettings } from './storage.js';
+
 export function renderBoard(rows, cols, handler) { 
   const container = document.getElementById('game'); 
   container.style.gridTemplate = `repeat(${rows}, 30px) / repeat(${cols}, 30px)`; 
@@ -47,9 +49,4 @@ export function playSound(type) {
 export function shareResults() {
   const time = document.getElementById('timer').textContent;
   prompt('Share this result:', `I completed Minesweeper in ${time}!`); 
-}
-
-// Save settings to storage
-function saveSettings(settings) {
-  localStorage.setItem('minesweeper-settings', JSON.stringify(settings));
 }
